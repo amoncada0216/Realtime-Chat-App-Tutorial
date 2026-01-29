@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream
-=======
 import { ENV } from "./env.js"
 
->>>>>>> Stashed changes
 import mongoose from "mongoose"
 
 export const connectDB = async () => {
@@ -11,12 +8,11 @@ export const connectDB = async () => {
 
         if (!MONGO_URI) throw new Error("MONGO_URI is not set.")
         
-        const conn = await mongoose.connect(process.env.MONGO_URI)
+        const conn = await mongoose.connect(ENV.MONGO_URI)
 
         console.log("MongoDB Connected:", conn.connection.host)
     } catch (error) {
-        console.log(process.env.MONGO_URI)
-
+        console.log(ENV.MONGO_URI)
         console.error("Error connecting to MongoDB:", error)
         
         process.exit(1) // 0 means success, 1 mean failure
