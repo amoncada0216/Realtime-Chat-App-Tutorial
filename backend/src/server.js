@@ -1,3 +1,6 @@
+import { connectDB } from "./lib/db.js"
+import { ENV } from "./lib/env.js"
+
 import express from "express"
 import dotenv from "dotenv"
 import path from "path"
