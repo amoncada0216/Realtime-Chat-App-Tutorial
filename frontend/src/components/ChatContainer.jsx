@@ -5,8 +5,8 @@ import { useChatStore } from "../store/useChatStore.js";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 
-import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder";
-import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton";
+import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder.jsx";
+import MessagesLoadingSkeleton from "./MessagesLoadingSkeleton.jsx";
 
 function ChatContainer() {
   const {
@@ -17,16 +17,14 @@ function ChatContainer() {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-
   const { authUser } = useAuthStore();
-
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
-
     subscribeToMessages();
 
+    // clean up
     return () => unsubscribeFromMessages();
   }, [
     selectedUser,
@@ -76,7 +74,6 @@ function ChatContainer() {
                 </div>
               </div>
             ))}
-            
             {/* 👇 scroll target */}
             <div ref={messageEndRef} />
           </div>
