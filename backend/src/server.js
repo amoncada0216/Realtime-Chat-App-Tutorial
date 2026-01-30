@@ -12,10 +12,15 @@ import messageRoutes from "./routes/message.route.js";
 
 const __dirname = path.resolve();
 
-const PORT = ENV.PORT || 3000;
+const PORT = ENV.PORT || 10000;
 
 app.use(express.json({ limit: "5mb" })); // req.body
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: ENV.NODE_ENV === "production" ? true : ENV.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
