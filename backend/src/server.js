@@ -1,38 +1,36 @@
-import { connectDB } from "./lib/db.js"
-import { ENV } from "./lib/env.js"
+import { connectDB } from "./lib/db.js";
+import { ENV } from "./lib/env.js";
+import { app, server } from "./lib/socket.js";
 
-import express from "express"
-import path from "path"
-import cookieParser from "cookie-parser"
+import express from "express";
+import cookieParser from "cookie-parser";
+import path from "path";
+import cors from "cors";
 
-import authRoutes from "./routes/auth.route.js"
-import messageRoutes from "./routes/message.route.js"
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
 
-const PORT = ENV.PORT || 7777;
-
-const app = express();
 const __dirname = path.resolve();
 
-app.use(express.json({ limit: "5mb" }))
-app.use(cookieParser())
+const PORT = ENV.PORT || 3000;
 
-// Serve frontend FIRST
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
+app.use(express.json({ limit: "5mb" })); // req.body
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(cookieParser());
 
-// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-// Make ready for deployment
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend", "dist")));
+// make ready for deployment
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (_, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}.`);
+server.listen(PORT, () => {
+  console.log("Server running on port: " + PORT);
   connectDB();
 });
